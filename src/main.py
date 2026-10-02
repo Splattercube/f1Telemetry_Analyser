@@ -1,5 +1,6 @@
 import fastf1
-from myFunctions import my_averageLaptime, my_averageRacePace, my_calculateDegredation 
+from myFunctions import (my_averageLaptime, my_averageRacePace, my_calculateDegredation
+                         , myPlotDegredation)
 
 
 session = fastf1.get_session(2026, "Monza", "R")
@@ -16,16 +17,18 @@ driver_laps = session.laps.pick_drivers("HAM")
 #     ]
 # )
 # print(driver_laps["Stint"].dtype)
-
+stint = 2
 print(driver_laps["Driver"].iloc[0])
 avg = my_averageLaptime(driver_laps)
-print("Avg laptime: ", avg)
+print(f"Avg laptime: {avg.round('1ms')}")
 avgP = my_averageRacePace(driver_laps)
-print("Avg pace: ", avgP)
-avgS1 = my_averageRacePace(driver_laps, 2)
-print("Avg pace 2nd stint: ", avgS1)
-degredation = my_calculateDegredation(driver_laps)
+print(f"Avg pace: {avgP.round('1ms')}")
+avgS1 = my_averageRacePace(driver_laps, stint)
+print(f"Avg pace 2nd stint: {avgS1.round('1ms')}")
+degredation = my_calculateDegredation(driver_laps, stint)
 print(f"Tyre deg is {degredation.slope:.3f}s per lap")
+
+myPlotDegredation(driver_laps, stint)
 
 
 
