@@ -32,10 +32,7 @@ def myPlotDegredation(laps, stint:int | None = None):
     tyreAge = cleanLaps["TyreLife"]
     lapTime = cleanLaps["LapTime"].dt.total_seconds()
 
-    # print("Tyre ages:", tyreAge.tolist())
-    # print("Lap times:", lapTime.tolist())
-    
-    
+  
     degredation = linregress(tyreAge, lapTime)
     predictedLap = degredation.intercept + degredation.slope * tyreAge
     
@@ -63,3 +60,21 @@ def myCleanRaceLaps(laps, stint: int | None = None):
             cleanLaps["Stint"] == stint
         ]
     return cleanLaps
+
+
+def my_compoundAnalysis(laps, stint: int | None = None, compound:str | None = None):
+    cleanLaps = myCleanRaceLaps(laps,stint)
+    compoundUsed = cleanLaps["Compound"].iloc[0]
+
+    if stint is not None:
+        cleanLaps = cleanLaps[cleanLaps["Stint"] == stint]
+
+    if compound is not None:
+        cleanLaps = cleanLaps[cleanLaps["Compound"] == compound]
+    
+    
+    pace = my_averageRacePace(cleanLaps)
+    deg = my_calculateDegredation(cleanLaps)
+    return pace, deg.slope, compoundUsed
+
+    

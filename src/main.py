@@ -1,9 +1,10 @@
 import fastf1
 from myFunctions import (my_averageLaptime, my_averageRacePace, my_calculateDegredation
-                         , myPlotDegredation)
+                         , myPlotDegredation, my_compoundAnalysis)
 
 
 session = fastf1.get_session(2026, "Monza", "R")
+stint = 2
 session.load()
 
 ##hamilton = session.drivers[4]
@@ -15,20 +16,29 @@ driver_laps = session.laps.pick_drivers("HAM")
 #     driver_laps[
 #         ["Driver", "LapNumber", "LapTime", "Compound", "Stint"]
 #     ]
-# )
+# 
 # print(driver_laps["Stint"].dtype)
-stint = 2
-print(driver_laps["Driver"].iloc[0])
-avg = my_averageLaptime(driver_laps)
-print(f"Avg laptime: {avg.round('1ms')}")
-avgP = my_averageRacePace(driver_laps)
-print(f"Avg pace: {avgP.round('1ms')}")
-avgS1 = my_averageRacePace(driver_laps, stint)
-print(f"Avg pace 2nd stint: {avgS1.round('1ms')}")
-degredation = my_calculateDegredation(driver_laps, stint)
-print(f"Tyre deg is {degredation.slope:.3f}s per lap")
+
+# print(driver_laps["Driver"].iloc[0])
+# avg = my_averageLaptime(driver_laps)
+# print(f"Avg laptime: {avg.round('1ms')}")
+# avgP = my_averageRacePace(driver_laps)
+# print(f"Avg pace: {avgP.round('1ms')}")
+# avgS1 = my_averageRacePace(driver_laps, stint)
+# print(f"Avg pace 2nd stint: {avgS1.round('1ms')}")
+# degredation = my_calculateDegredation(driver_laps, stint)
+# print(f"Tyre deg is {degredation.slope:.3f}s per lap")
 
 myPlotDegredation(driver_laps, stint)
+
+avgPace, deg, compound = my_compoundAnalysis(driver_laps, stint)
+print(f"Compound: {compound}")
+print(f"Average Pace: {avgPace.round('1ms')}")
+print(f"Degredation per lap: {deg:.3f}s")
+
+
+
+
 
 
 
