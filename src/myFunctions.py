@@ -1,6 +1,7 @@
 import fastf1
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
+import pandas as pd
 def my_averageLaptime(laps):
     return laps["LapTime"].mean()
 
@@ -14,6 +15,8 @@ def my_averageRacePace(laps, stint:int | None = None):
 def my_calculateDegredation(laps, stint:int | None = None):
     degredation = 0
     cleanLaps = myCleanRaceLaps(laps, stint)
+    if len(cleanLaps) < 2:
+            return None
     tyreAge = cleanLaps["TyreLife"]
     lapTime = cleanLaps["LapTime"].dt.total_seconds()
 
@@ -28,7 +31,8 @@ def myPlotDegredation(laps, stint:int | None = None):
     cleanLaps = myCleanRaceLaps(laps, stint)
     # print(cleanLaps[["LapNumber", "Stint", "TyreLife", "LapTime"]])
     # print("Number of laps:", len(cleanLaps))
-    
+    if len(cleanLaps) < 2:
+        return None
     tyreAge = cleanLaps["TyreLife"]
     lapTime = cleanLaps["LapTime"].dt.total_seconds()
 
@@ -75,6 +79,26 @@ def my_compoundAnalysis(laps, stint: int | None = None, compound:str | None = No
     
     pace = my_averageRacePace(cleanLaps)
     deg = my_calculateDegredation(cleanLaps)
-    return pace, deg.slope, compoundUsed
+    numLaps = len(cleanLaps)
 
+    if deg is None:
+        degSlope = None
+    else:
+        degSlope = deg.slope
     
+    return pace, degSlope, compoundUsed, numLaps
+
+
+def my_compareStints(laps):
+    stintRes = []
+    stints = laps["Stint"].dropna().unique()
+    for stint in stints:
+        pace, deg, comp, numLaps = my_compoundAnalysis(laps, stint)
+        stintRes.append((stint, pace, deg, comp, numLaps))
+    stintDF = pd.DataFrame(
+        stintRes,
+        columns=["Stint", "AveragePace", "Degredation", "Compound", "NumberLaps"]
+    )
+
+    return stintDF
+
