@@ -1,0 +1,9 @@
+<!-- #columns for session.laps
+<!-- # ['Time', 'Driver', 'DriverNumber', 'LapTime', 'LapNumber', 'Stint',
+#        'PitOutTime', 'PitInTime', 'Sector1Time', 'Sector2Time', 'Sector3Time',
+#        'Sector1SessionTime', 'Sector2SessionTime', 'Sector3SessionTime',
+#        'SpeedI1', 'SpeedI2', 'SpeedFL', 'SpeedST', 'IsPersonalBest',
+#        'Compound', 'TyreLife', 'FreshTyre', 'Team', 'LapStartTime',
+#        'LapStartDate', 'TrackStatus', 'Position', 'Deleted', 'DeletedReason',
+#        'FastF1Generated', 'IsAccurate'],
+#       dtype='object' --> -->
