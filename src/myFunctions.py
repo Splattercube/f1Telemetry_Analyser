@@ -2,16 +2,18 @@ import fastf1
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 import pandas as pd
+#avg laptime as panda datatype
 def my_averageLaptime(laps):
     return laps["LapTime"].mean()
 
 
-
+#avg pacefor valid laps pandaDT
 def my_averageRacePace(laps, stint:int | None = None):
     cleanLaps = myCleanRaceLaps(laps, stint)
 
     return cleanLaps["LapTime"].mean()
 
+#returns lineregression
 def my_calculateDegredation(laps, stint:int | None = None):
     degredation = 0
     cleanLaps = myCleanRaceLaps(laps, stint)
@@ -25,7 +27,7 @@ def my_calculateDegredation(laps, stint:int | None = None):
 
     return degredation
 
-
+#void shows scatterplot line regression
 def myPlotDegredation(laps, stint:int | None = None):
     degredation = 0
     cleanLaps = myCleanRaceLaps(laps, stint)
@@ -48,7 +50,7 @@ def myPlotDegredation(laps, stint:int | None = None):
     plt.title("Tyre Degredation")
     plt.show()
 
-
+#filter data returns valid raceLaps
 def myCleanRaceLaps(laps, stint: int | None = None):
     cleanLaps = laps.dropna(subset=["LapTime"])#drop laps with no time associated
     cleanLaps = cleanLaps[
@@ -65,7 +67,7 @@ def myCleanRaceLaps(laps, stint: int | None = None):
         ]
     return cleanLaps
 
-
+#returns pace, degSlope, compoundUsed, numberof laps in stint
 def my_compoundAnalysis(laps, stint: int | None = None, compound:str | None = None):
     cleanLaps = myCleanRaceLaps(laps,stint)
     compoundUsed = cleanLaps["Compound"].iloc[0]
@@ -88,7 +90,7 @@ def my_compoundAnalysis(laps, stint: int | None = None, compound:str | None = No
     
     return pace, degSlope, compoundUsed, numLaps
 
-
+#returns DF of Stints
 def my_compareStints(laps):
     stintRes = []
     stints = laps["Stint"].dropna().unique()
