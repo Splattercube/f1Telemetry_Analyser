@@ -2,6 +2,7 @@ import fastf1
 from scipy.stats import linregress
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 #avg laptime as panda datatype
 def my_averageLaptime(laps):
     return laps["LapTime"].mean()
@@ -103,4 +104,65 @@ def my_compareStints(laps):
     )
 
     return stintDF
+
+
+
+def my_raceAnalysis(laps):
+    cleanLaps = myCleanRaceLaps(laps).copy()
+    cleanLaps["LapTimeSeconds"] = cleanLaps["LapTime"].dt.total_seconds()
+    cleanLaps = cleanLaps[["LapNumber", "Stint", "TyreLife", 
+                           "LapTimeSeconds", "Compound"]
+                           ]
+
+    return cleanLaps.copy()
+
+
+def my_plotAnalysis(raceData):
+    plt.scatter(
+        raceData["LapNumber"],
+        raceData["LapTimeSeconds"]
+    )
+
+    plt.xlabel("Race Lap")
+    plt.ylabel("Lap Time (seconds)")
+    plt.title("Lap Time vs Race Progression")
+    plt.show()
+
+    plt.scatter(
+        raceData["TyreLife"],
+        raceData["LapTimeSeconds"]
+    )
+
+    plt.xlabel("Tyre Age (laps)")
+    plt.ylabel("Lap Time (seconds)")
+    plt.title("Lap Time vs Tyre Age")
+    plt.show()
+
+def my_multiRegression(raceData):
+    tyreAge = raceData["TyreLife"].to_numpy()
+    raceLap = raceData["LapNumber"].to_numpy()
+    lapTime = raceData["LapTimeSeconds"].to_numpy()
+
+    X = np.column_stack((
+        np.ones(len(raceData)),
+        tyreAge,
+        raceLap
+    ))
+
+    beta, residuals, rank, singularValues = np.linalg.lstsq(
+        X,
+        lapTime,
+        rcond=None
+    )
+
+    intercept = beta[0]
+    tyreEffect = beta[1]
+    raceLapEffect = beta[2]
+
+    print(f"Intercept: {intercept:.3f}")
+    print(f"Tyre age effect: {tyreEffect:.3f} s/lap")
+    print(f"Race lap effect: {raceLapEffect:.3f} s/lap")
+
+    return intercept, tyreEffect, raceLapEffect
+
 

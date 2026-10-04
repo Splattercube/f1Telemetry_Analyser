@@ -1,9 +1,10 @@
 import fastf1
 from myFunctions import (my_averageLaptime, my_averageRacePace, my_calculateDegredation
-                         , myPlotDegredation, my_compoundAnalysis, my_compareStints, myCleanRaceLaps)
+                         , myPlotDegredation, my_compoundAnalysis, my_compareStints, myCleanRaceLaps
+                         , my_raceAnalysis, my_multiRegression)
 
-
-session = fastf1.get_session(2026, "Monza", "R")
+from myFunctions import my_plotAnalysis
+session = fastf1.get_session(2026, "Spa", "R")
 stint = 2
 session.load()
 
@@ -43,9 +44,14 @@ driver_laps = session.laps.pick_drivers("PIA")
 #     ["LapNumber", "Stint", "Compound", "TyreLife", "LapTime"]
 # ])
 
-stintInfo = my_compareStints(driver_laps)
-print(stintInfo)
+# stintInfo = my_compareStints(driver_laps)
+# print(stintInfo)
 
+raceData = my_raceAnalysis(driver_laps)
+# print(raceData)
+my_plotAnalysis(raceData)
+
+intercept, tEffect, raceEffect = my_multiRegression(raceData)
 
 
 
