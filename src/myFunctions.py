@@ -166,3 +166,11 @@ def my_multiRegression(raceData):
     return intercept, tyreEffect, raceLapEffect
 
 
+def my_regressionAccuracy(raceData, intercept, tyreEffect, raceLapEffect):
+    predictedLap = (intercept, + tyreEffect * raceData["TyreLife"]
+                    + raceLapEffect * raceData["LapNumber"])
+    error = raceData["LapTimeSeconds"] - predictedLap
+    rmse = np.sqrt(np.mean(error ** 2))
+    return rmse
+
+
